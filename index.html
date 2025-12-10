@@ -15,7 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap"
         rel="stylesheet">
     
-    <!-- 🚀 감정 이미지 프리로드 - 딜레이 방지 -->
+    <!-- ?? 감정 ?��?지 ?�리로드 - ?�레??방�? -->
     <link rel="preload" as="image" href="image/Happiness.png">
     <link rel="preload" as="image" href="image/Anticipation.png">
     <link rel="preload" as="image" href="image/Love.png">
@@ -27,80 +27,83 @@
 </head>
 
 <body>
-    <!-- 스크롤 안내 -->
+    <!-- ?�크�??�내 -->
     <div class="scroll-hint">
-        <div class="scroll-hint-text">스크롤해서 좌우로 이동</div>
         <div class="scroll-hint-buttons">
-            <div class="scroll-arrow left" id="scrollLeft">←</div>
-            <div class="scroll-arrow right" id="scrollRight">→</div>
+            <div class="scroll-arrow left" id="scrollLeft">??/div>
+            <div class="scroll-arrow right" id="scrollRight">??/div>
         </div>
     </div>
 
     <div class="scroll-container" id="scrollContainer">
         <!-- Section 1: How are U today? -->
         <section class="section section-1">
+            <!-- ??배경 중앙 ?��?지 -->
+            <img class="home-path-bg" src="image/Home_path.png" alt="" aria-hidden="true">
+            
             <div class="content-wrapper">
                 <h1 class="main-title">
                     <img class="main-title-img" src="image/How are U today_.png" alt="" aria-hidden="true">
                 </h1>
 
                 <div class="shapes-container">
-                    <svg class="path-line" viewBox="0 0 2000 1200" preserveAspectRatio="none">
-                        <path d="M 60 360 C 260 520, 520 520, 760 420 S 1160 200, 1480 420 S 1740 760, 1920 640"
-                            stroke="#dcdcdc" stroke-width="2" stroke-dasharray="10 14" fill="none" />
-                    </svg>
-
-                    <!-- hero shapes pulled from assets -->
+                    <!-- hero shapes pulled from assets (모두 ?�일 ?�기) -->
                     <img class="hero-shape" src="image/Exhaustion.png" alt="orange arc"
-                        style="--size:200px; top:-10%; left:-6%;">
+                        style="--size:205px; top:-2%; left:1%;">
+                    <img class="hero-shape" src="image/Exhaustion.png" alt="orange arc"
+                        style="--size:205px; top:60%; left:12%;">
                     <img class="hero-shape" src="image/Happiness.png" alt="yellow flower"
-                        style="--size:190px; top:8%; left:-2%;">
+                        style="--size:205px; top:34%; left:-2%;">
                     <img class="hero-shape" src="image/Anxiety.png" alt="purple star"
-                        style="--size:150px; top:18%; left:18%;">
+                        style="--size:205px; top:16%; left:4%;">
+                    <img class="hero-shape" src="image/Anticipation.png" alt="teal m"
+                        style="--size:205px; top:20%; left:12%;">
                     <img class="hero-shape" src="image/Happiness.png" alt="yellow flower"
-                        style="--size:180px; top:32%; left:10%;">
+                        style="--size:205px; top:3%; left:10%;">
                     <img class="hero-shape" src="image/Love.png" alt="pink heart"
-                        style="--size:160px; top:48%; left:12%;">
+                        style="--size:265px; top:38%; left:13%;">
                     <img class="hero-shape" src="image/Anticipation.png" alt="teal m"
-                        style="--size:190px; top:64%; left:10%;">
+                        style="--size:205px; top:64%; left:2%;">
                     <img class="hero-shape" src="image/Sadness.png" alt="blue drop"
-                        style="--size:200px; top:82%; left:2%;">
+                        style="--size:205px; top:82%; left:-2%;">
                     <img class="hero-shape" src="image/Angry.png" alt="red spiky"
-                        style="--size:160px; top:72%; left:26%;">
-
+                        style="--size:225px; top:72%; left:26%;">
+                    <img class="hero-shape" src="image/Angry.png" alt="red spiky"
+                        style="--size:225px; top:92%; left:18%;">
                     <img class="hero-shape" src="image/Sadness.png" alt="blue drop"
-                        style="--size:200px; top:16%; left:44%;">
+                        style="--size:205px; top:16%; left:44%;">
                     <img class="hero-shape" src="image/Anxiety.png" alt="purple star"
-                        style="--size:170px; top:48%; left:50%;">
+                        style="--size:205px; top:31%; left:40%;">
                     <img class="hero-shape" src="image/Achieve.png" alt="blue arrow"
-                        style="--size:170px; top:54%; left:60%;">
+                        style="--size:205px; top:54%; left:22%;">
                     <img class="hero-shape" src="image/Achieve.png" alt="blue arrow"
-                        style="--size:170px; top:62%; left:66%;">
-                    <img class="hero-shape" src="image/Anticipation.png" alt="teal m"
-                        style="--size:190px; top:72%; left:74%;">
+                        style="--size:205px; top:12%; left:28%;">
+                    <!-- <img class="hero-shape" src="image/Anticipation.png" alt="teal m"
+                        style="--size:205px; top:72%; left:74%;"> -->
 
                     <img class="hero-shape" src="image/Angry.png" alt="red spiky"
-                        style="--size:160px; top:26%; left:74%;">
+                        style="--size:225px; top:0%; left:74%;">
                     <img class="hero-shape" src="image/Anxiety.png" alt="purple star"
-                        style="--size:160px; top:10%; left:84%;">
-                    <img class="hero-shape" src="image/Happiness.png" alt="yellow flower"
-                        style="--size:150px; top:38%; left:90%;">
+                        style="--size:205px; top:11%; left:81%;">
+                    <!-- <img class="hero-shape" src="image/Happiness.png" alt="yellow flower"
+                        <!-- style="--size:205px; top:38%; left:90%;"> -->
                     <img class="hero-shape" src="image/Love.png" alt="pink heart"
-                        style="--size:160px; top:56%; left:86%;">
-                    <img class="hero-shape" src="image/Anticipation.png" alt="teal m"
-                        style="--size:180px; top:74%; left:86%;">
+                        style="--size:265px; top:46%; left:64%;">
+                    <img class="hero-shape" src="image/Love.png" alt="pink heart"
+                        style="--size:265px; top:80%; left:12%;">
+
 
                     <!-- shapes sitting on the path -->
                     <img class="hero-shape on-path" src="image/Sadness.png" alt="blue drop"
-                        style="--size:150px; top:34%; left:34%;">
+                        style="--size:205px; top:90%; left:50%;">
                     <img class="hero-shape on-path" src="image/Achieve.png" alt="blue arrow"
-                        style="--size:150px; top:46%; left:58%;">
+                        style="--size:205px; top:56%; left:62%;">
                     <img class="hero-shape on-path" src="image/Anticipation.png" alt="teal m"
-                        style="--size:150px; top:58%; left:70%;">
+                        style="--size:205px; top:76%; left:76%;">
                     <img class="hero-shape on-path" src="image/Happiness.png" alt="yellow flower"
-                        style="--size:140px; top:30%; left:78%;">
+                        style="--size:205px; top:28%; left:78%;">
                     <img class="hero-shape on-path" src="image/Love.png" alt="pink heart"
-                        style="--size:140px; top:62%; left:32%;">
+                        style="--size:265px; top:62%; left:32%;">
                 </div>
 
                 <div class="lets-text">
@@ -115,10 +118,6 @@
                 <h2 class="pick-title">
                     <img class="pick-title-img" src="image/Pick.png" alt="" aria-hidden="true">
                 </h2>
-
-                <div class="here-pointer">
-                    <span class="here-text">here!</span>
-                </div>
 
                 <div class="emotions-grid">
                     <div class="emotion-card">
@@ -177,6 +176,7 @@
                         <p class="emotion-label">EXHAUSTION</p>
                     </div>
                 </div>
+                <img class="pick-background-path" src="image/Home_path2.png" alt="" aria-hidden="true">
             </div>
         </section>
     </div>
@@ -184,8 +184,8 @@
     <!-- 공통 감정 Detail Screen -->
     <div class="detail-screen" id="emotionScreen" data-emotion="" aria-hidden="true">
         <div class="detail-content">
-            <button class="detail-nav prev" id="detailPrev" aria-label="이전"></button>
-            <button class="detail-nav next" id="detailNext" aria-label="다음"></button>
+            <button class="detail-nav prev" id="detailPrev" aria-label="?�전"></button>
+            <button class="detail-nav next" id="detailNext" aria-label="?�음"></button>
             <div class="detail-card" id="detailCard">
                 <div class="detail-header"></div>
                 <div class="detail-notes">
@@ -198,11 +198,12 @@
 
     <!-- Drop target section -->
     <section class="section drop-section" id="dropSection">
-        <button class="home-btn" id="homeBtn" aria-label="Pick 섹션으로 이동"></button>
+        <img class="bethe-logo" src="image/Bethe.png" alt="BE THE BIZZ" aria-hidden="true">
+        <button class="home-btn" id="homeBtn" aria-label="Pick ?�션?�로 ?�동"></button>
         <div class="drop-content">
             <svg class="drop-overlay" id="dropOverlay" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true"></svg>
             <svg class="drop-path" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M -200 40 C 120 120, 420 60, 720 150 S 1200 260, 1500 220 S 1340 440, 1100 420 S 760 480, 520 520 S 180 560, -100 760" />
+                <path d="M -30 150 C 140 140, 320 190, 520 210 S 870 260, 1000 300 S 1130 420, 1200 620" />
             </svg>
             <div class="put-here" id="dropZone">
                 <div class="put-here-label">PUT</div>
@@ -213,17 +214,29 @@
         </div>
     </section>
 
-    <!-- 토큰 상세보기 모달 -->
+    <!-- ?�큰 ?�세보기 모달 -->
     <div class="token-modal" id="tokenModal" aria-hidden="true">
         <div class="token-modal-backdrop" id="tokenModalBackdrop"></div>
         <div class="token-modal-content" id="tokenModalContent">
-            <button class="token-modal-close" id="tokenModalClose" aria-label="닫기">&times;</button>
-            <div class="token-modal-icon" id="tokenModalIcon"></div>
-            <div class="token-modal-emotion" id="tokenModalEmotion"></div>
-            <div class="token-modal-date" id="tokenModalDate"></div>
-            <div class="token-modal-note-label">메모</div>
+            <!-- ?�더: ?�짜 + ?�이콘들 -->
+            <div class="token-modal-header">
+                <div class="token-modal-date" id="tokenModalDate"></div>
+                <div class="token-modal-actions">
+                    <button class="token-modal-btn" id="tokenModalEdit" aria-label="?�정">
+                        <img src="image/Pen_Icon.png" alt="?�정">
+                    </button>
+                    <button class="token-modal-btn" id="tokenModalDelete" aria-label="??��">
+                        <img src="image/Trash_icon.png" alt="??��">
+                    </button>
+                    <button class="token-modal-btn" id="tokenModalClose" aria-label="?�기">
+                        <img src="image/delete_icon.png" alt="?�기">
+                    </button>
+                </div>
+            </div>
+            <!-- 물결??-->
+            <div class="token-modal-wave"></div>
+            <!-- 메모 ?�용 -->
             <div class="token-modal-note" id="tokenModalNote"></div>
-            <button class="token-modal-delete" id="tokenModalDelete">삭제</button>
         </div>
     </div>
 

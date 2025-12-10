@@ -11,6 +11,65 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // ============ 파티클(컨페티) 효과 ============
+    // 새로운 컨페티 색상
+    const confettiColors = [
+        '#FBFF65', // 노랑
+        '#00CC99', // 민트
+        '#FF7EC0', // 핑크
+        '#3168F9', // 파랑
+        '#B35FF5', // 보라
+        '#6DC7FE', // 하늘색
+        '#FE0000', // 빨강
+        '#F69628'  // 주황
+    ];
+
+    function createConfetti() {
+        // 컨테이너 생성
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        document.body.appendChild(confettiContainer);
+
+        // 파티클 개수
+        const particleCount = 80;
+
+        for (let i = 0; i < particleCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            
+            // 랜덤 색상
+            const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+            confetti.style.backgroundColor = color;
+            
+            // 랜덤 위치 (화면 전체 너비)
+            confetti.style.left = Math.random() * 100 + '%';
+            
+            // 고정 크기
+            confetti.style.width = '6px';
+            confetti.style.height = '24px';
+            
+            // 랜덤 애니메이션 지속 시간
+            const duration = Math.random() * 2 + 2;
+            confetti.style.animationDuration = duration + 's';
+            
+            // 랜덤 지연 시간
+            const delay = Math.random() * 0.5;
+            confetti.style.animationDelay = delay + 's';
+            
+            // 랜덤 초기 회전
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            
+            confettiContainer.appendChild(confetti);
+        }
+
+        // 애니메이션 끝나면 컨테이너 제거
+        setTimeout(() => {
+            confettiContainer.remove();
+        }, 4500);
+
+        console.log('🎉 파티클 효과 실행!');
+    }
+
     // 감정별 설정
     const emotionConfig = {
         happiness: { placeholder: '오늘의 행복을 적어보세요', color: '#CFD500' },
@@ -320,6 +379,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 savedEmotionsData = result.data;
                 console.log(`📝 ${result.data.length}개의 감정 기록 로드 완료`);
                 renderSavedTokens();
+                
+                // 저장된 데이터가 있으면 PUT HERE 숨기기
+                if (dropZone) {
+                    dropZone.classList.add('hidden');
+                }
             }
         } catch (error) {
             console.log('저장된 기록 없음 또는 서버 연결 실패');
@@ -354,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             item.setAttribute('data-emotion', emotion.emotion.toLowerCase());
             item.style.left = `calc(${percentX}% - 70px)`;
             item.style.top = `calc(${percentY}% - 70px)`;
-            item.innerHTML = `<div>${emotion.emotion}</div><div class="token-date">${emotion.date}</div>`;
+            item.innerHTML = `<div class="token-date-only">${emotion.date}</div>`;
             
             // 토큰 클릭 이벤트 추가
             item.addEventListener('click', () => openTokenModal(idx));
@@ -368,13 +432,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const tokenModalBackdrop = document.getElementById('tokenModalBackdrop');
     const tokenModalClose = document.getElementById('tokenModalClose');
     const tokenModalContent = document.getElementById('tokenModalContent');
-    const tokenModalIcon = document.getElementById('tokenModalIcon');
-    const tokenModalEmotion = document.getElementById('tokenModalEmotion');
     const tokenModalDate = document.getElementById('tokenModalDate');
     const tokenModalNote = document.getElementById('tokenModalNote');
     const tokenModalDelete = document.getElementById('tokenModalDelete');
+    const tokenModalEdit = document.getElementById('tokenModalEdit');
     
     let currentModalIdx = -1;
+    let isEditMode = false;
+
+    // 수정 모드 종료 함수 (먼저 선언)
+    function exitEditMode(newNote = null) {
+        const textarea = document.getElementById('tokenModalNoteEdit');
+        if (textarea) {
+            textarea.remove();
+        }
+        
+        if (tokenModalNote) {
+            tokenModalNote.style.display = '';
+            if (newNote !== null) {
+                tokenModalNote.textContent = newNote;
+            }
+        }
+        
+        // 수정 버튼 아이콘 복원
+        if (tokenModalEdit) {
+            tokenModalEdit.innerHTML = '<img src="image/Pen_Icon.png" alt="수정">';
+            tokenModalEdit.title = '수정';
+        }
+        
+        isEditMode = false;
+    }
 
     // 모달 열기
     function openTokenModal(idx) {
@@ -385,9 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const emotionLower = emotionData.emotion.toLowerCase();
         
         // 데이터 표시
-        tokenModalIcon.setAttribute('data-emotion', emotionLower);
         tokenModalContent.setAttribute('data-emotion', emotionLower);
-        tokenModalEmotion.textContent = emotionData.emotion;
         tokenModalDate.textContent = emotionData.date;
         tokenModalNote.textContent = emotionData.note || '';
         
@@ -401,6 +486,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 모달 닫기
     function closeTokenModal() {
         if (!tokenModal) return;
+        
+        // 수정 모드 종료
+        if (isEditMode) {
+            exitEditMode();
+        }
+        
         tokenModal.classList.remove('is-active');
         tokenModal.setAttribute('aria-hidden', 'true');
         currentModalIdx = -1;
@@ -421,6 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 삭제 버튼
     // 삭제 버튼
     if (tokenModalDelete) {
         tokenModalDelete.addEventListener('click', async () => {
@@ -453,6 +545,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 수정 모드 진입
+    function enterEditMode() {
+        if (currentModalIdx < 0 || !tokenModalNote) return;
+        
+        const currentNote = tokenModalNote.textContent || '';
+        
+        // 메모 영역을 textarea로 교체
+        const textarea = document.createElement('textarea');
+        textarea.id = 'tokenModalNoteEdit';
+        textarea.className = 'token-modal-note-edit';
+        textarea.value = currentNote;
+        textarea.placeholder = '메모를 입력하세요...';
+        
+        tokenModalNote.style.display = 'none';
+        tokenModalNote.parentNode.insertBefore(textarea, tokenModalNote.nextSibling);
+        textarea.focus();
+        
+        // 수정 버튼 아이콘을 체크 아이콘으로 변경
+        if (tokenModalEdit) {
+            tokenModalEdit.innerHTML = '<img src="image/check_icon.png" alt="저장" onerror="this.outerHTML=\'✓\'">';
+            tokenModalEdit.title = '저장';
+        }
+        
+        isEditMode = true;
+        console.log('✏️ 수정 모드 진입');
+    }
+
+    // 수정 저장
+    async function saveEdit() {
+        if (currentModalIdx < 0) return;
+        
+        const textarea = document.getElementById('tokenModalNoteEdit');
+        if (!textarea) return;
+        
+        const newNote = textarea.value;
+        const emotionData = savedEmotionsData[currentModalIdx];
+        
+        if (emotionData) {
+            // 서버에 업데이트
+            if (emotionData.id) {
+                try {
+                    const response = await fetch(`/api/emotions/${emotionData.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ note: newNote })
+                    });
+                    const result = await response.json();
+                    console.log('✅ 수정 완료:', result);
+                } catch (error) {
+                    console.error('수정 실패:', error);
+                }
+            }
+            
+            // 로컬 데이터 업데이트
+            emotionData.note = newNote;
+        }
+        
+        // UI 복원
+        exitEditMode(newNote);
+        
+        // 토큰 재렌더링
+        renderSavedTokens();
+    }
+
+    // 수정 버튼 클릭
+    if (tokenModalEdit) {
+        tokenModalEdit.addEventListener('click', () => {
+            if (currentModalIdx < 0) return;
+            
+            if (isEditMode) {
+                // 저장 모드: 저장 실행
+                saveEdit();
+            } else {
+                // 보기 모드: 수정 모드 진입
+                enterEditMode();
+            }
+        });
+    }
+
     // 페이지 로드 시 데이터 불러오기
     loadSavedEmotions();
     
@@ -474,6 +645,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.body.appendChild(token);
         activeToken = token;
+        
+        // PUT HERE 드롭 가능 상태로 활성화
+        if (dropZone) {
+            dropZone.classList.add('droppable');
+        }
 
         const moveWithMouse = (e) => {
             if (!activeToken) return;
@@ -485,6 +661,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const handleDrop = () => {
             if (!activeToken || !dropZone || !dropOverlay || !dropPathSvg) return;
+            
+            // 🎉 드롭존 진입 즉시 파티클 효과 실행!
+            createConfetti();
+            
             const overlayRect = dropOverlay.getBoundingClientRect();
             const pathLen = dropPathSvg.getTotalLength();
 
@@ -505,6 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     activeToken.remove();
                     activeToken = null;
+                    
                     if (dropStack) {
                         // 서버 응답 데이터가 있으면 사용, 없으면 기본값
                         if (serverData) {
@@ -525,6 +706,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.removeEventListener('mousemove', moveWithMouse);
             dropZone.removeEventListener('mouseenter', handleDrop);
+            
+            // PUT HERE 숨기기 (드롭 성공)
+            if (dropZone) {
+                dropZone.classList.remove('droppable');
+                dropZone.classList.add('hidden');
+            }
         };
 
         if (dropZone) {
@@ -533,4 +720,113 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateButtons();
+
+    // ============================================
+    // 🌟 Hero cursor gravity
+    // ============================================
+    const heroSection = document.querySelector('.section-1');
+    const heroShapes = Array.from(document.querySelectorAll('.hero-shape'));
+    const scrollContainerEl = document.getElementById('scrollContainer');
+
+    if (heroSection && heroShapes.length > 0) {
+        const MAX_INFLUENCE = 260;  // 영향 범위 (px)
+        const MAX_STRENGTH = 0.45;  // 최대 끌림 강도
+        
+        // scale / shadow 범위
+        const MIN_SCALE = 1.0;
+        const MAX_SCALE = 1.18;
+        const MIN_SHADOW = 0.26;
+        const MAX_SHADOW = 0.6;
+
+        let heroBasePositions = [];
+
+        // 각 도형의 원래 중심 좌표 계산
+        function updateHeroBasePositions() {
+            heroBasePositions = heroShapes.map((el) => {
+                const rect = el.getBoundingClientRect();
+                return {
+                    el,
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                };
+            });
+        }
+
+        // debounce 함수
+        function debounce(fn, delay) {
+            let timer = null;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        // 초기 위치 계산
+        updateHeroBasePositions();
+
+        // 윈도우 리사이즈 시 재계산
+        window.addEventListener('resize', debounce(updateHeroBasePositions, 150));
+
+        // 수평 스크롤 멈춤 후 재계산
+        if (scrollContainerEl) {
+            scrollContainerEl.addEventListener('scroll', debounce(updateHeroBasePositions, 150));
+        }
+
+        // 마우스 움직임에 따른 중력 효과
+        heroSection.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            heroBasePositions.forEach(({ el, x, y }) => {
+                const dx = mouseX - x;
+                const dy = mouseY - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > MAX_INFLUENCE) {
+                    // 영향 범위 밖이면 원위치 + 원래 크기
+                    el.style.setProperty('--gx', '0px');
+                    el.style.setProperty('--gy', '0px');
+                    el.style.setProperty('--gs', '1');
+                } else {
+                    // 영향 범위 안이면 커서 쪽으로 끌림 + 크기 증가
+                    const strength = (MAX_INFLUENCE - distance) / MAX_INFLUENCE;
+                    const offsetX = dx * strength * MAX_STRENGTH;
+                    const offsetY = dy * strength * MAX_STRENGTH;
+                    el.style.setProperty('--gx', `${offsetX}px`);
+                    el.style.setProperty('--gy', `${offsetY}px`);
+                    
+                    // 가까울수록 크기 증가 (1.0 → 1.15)
+                    const scale = 1 + (0.15 * strength);
+                    el.style.setProperty('--gs', scale.toString());
+                }
+            });
+        });
+
+        // 마우스가 섹션을 떠나면 모두 원위치 + 원래 크기
+        heroSection.addEventListener('mouseleave', () => {
+            heroShapes.forEach((el) => {
+                el.style.setProperty('--gx', '0px');
+                el.style.setProperty('--gy', '0px');
+                el.style.setProperty('--gs', '1');
+            });
+        });
+
+        console.log('🌟 Hero cursor gravity 효과 활성화');
+    }
+
+    // ============================================
+    // 🎲 Hero shapes 랜덤 기울기 설정
+    // ============================================
+    const heroShapesForRotate = Array.from(document.querySelectorAll('.hero-shape'));
+    
+    if (heroShapesForRotate.length > 0) {
+        heroShapesForRotate.forEach((el) => {
+            // 랜덤 기울기: -20도 ~ 20도
+            const rotateDeg = (Math.random() * 40 - 20).toFixed(1);
+            el.style.setProperty('--rotate', `${rotateDeg}deg`);
+        });
+        
+        console.log('🎲 Hero shapes 랜덤 기울기 적용 완료');
+    }
+
 });
